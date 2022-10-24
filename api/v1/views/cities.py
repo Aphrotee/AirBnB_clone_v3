@@ -1,40 +1,5 @@
 #!/usr/bin/python3
-<<<<<<< HEAD
 
-"""
-contains route methods
-"""
-
-from api.v1.views import app_views
-from flask import jsonify
-from models import storage
-from models.__init__ import storage
-from models.user import User
-from models.place import Place
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.review import Review
-
-
-classes = {
-           'users': User, 'places': Place,
-           'states': State, 'cities': City, 'amenities': Amenity,
-           'reviews': Review
-          }
-
-
-@app_views.route('/states/<state_id>/cities', strict_slashes=False)
-def get_cities(state_id):
-    cities = storage.all(City)
-    state = storage.get(State, state_id)
-    if not state:
-        abort(404)
-    cities_js = [city.to_dict() for city in cities.values()\
-            if city.state_id == state_id]
-if __name__ == '__name__':
-    pass
-=======
 """ View for City objects that handles default API actions """
 from api.v1.views import app_views
 from flask import jsonify, abort, make_response, request
@@ -47,7 +12,7 @@ from models.city import City
                  strict_slashes=False)
 def cities(state_id):
     """ Retrieves the list of all City objects """
-    state = storage.get("State", state_id)
+    state = storage.get(State, state_id)
     if not state:
         abort(404)
     return jsonify([city.to_dict() for city in state.cities])
@@ -56,7 +21,7 @@ def cities(state_id):
 @app_views.route('/cities/<city_id>', methods=['GET'], strict_slashes=False)
 def r_city_id(city_id):
     """ Retrieves a City object """
-    city = storage.get("City", city_id)
+    city = storage.get(City, city_id)
     if not city:
         abort(404)
     return jsonify(city.to_dict())
@@ -66,7 +31,7 @@ def r_city_id(city_id):
                  strict_slashes=False)
 def del_city(city_id):
     """ Deletes a City object """
-    city = storage.get("City", city_id)
+    city = storage.get(City, city_id)
     if not city:
         abort(404)
     city.delete()
@@ -78,7 +43,7 @@ def del_city(city_id):
                  strict_slashes=False)
 def post_city(state_id):
     """ Creates a City object """
-    state = storage.get("State", state_id)
+    state = storage.get(State, state_id)
     if not state:
         abort(404)
     new_city = request.get_json()
@@ -97,7 +62,7 @@ def post_city(state_id):
                  strict_slashes=False)
 def put_city(city_id):
     """ Updates a City object """
-    city = storage.get("City", city_id)
+    city = storage.get(City, city_id)
     if not city:
         abort(404)
 
@@ -111,4 +76,3 @@ def put_city(city_id):
 
     storage.save()
     return make_response(jsonify(city.to_dict()), 200)
->>>>>>> e32c61ead60fba5f605ffb9083491d0ab8b32bb8
